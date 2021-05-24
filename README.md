@@ -1,2 +1,2 @@
 # BHProject
-Project for job interview
+This my job interview project. 

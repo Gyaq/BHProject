@@ -1,0 +1,12 @@
+F:\Projects\WorkTest\BHProject\DomainObjects\bin\Debug\net5.0\DomainObjects.deps.json
+F:\Projects\WorkTest\BHProject\DomainObjects\bin\Debug\net5.0\DomainObjects.dll
+F:\Projects\WorkTest\BHProject\DomainObjects\bin\Debug\net5.0\ref\DomainObjects.dll
+F:\Projects\WorkTest\BHProject\DomainObjects\bin\Debug\net5.0\DomainObjects.pdb
+F:\Projects\WorkTest\BHProject\DomainObjects\obj\Debug\net5.0\DomainObjects.csprojAssemblyReference.cache
+F:\Projects\WorkTest\BHProject\DomainObjects\obj\Debug\net5.0\DomainObjects.GeneratedMSBuildEditorConfig.editorconfig
+F:\Projects\WorkTest\BHProject\DomainObjects\obj\Debug\net5.0\DomainObjects.AssemblyInfoInputs.cache
+F:\Projects\WorkTest\BHProject\DomainObjects\obj\Debug\net5.0\DomainObjects.AssemblyInfo.cs
+F:\Projects\WorkTest\BHProject\DomainObjects\obj\Debug\net5.0\DomainObjects.csproj.CoreCompileInputs.cache
+F:\Projects\WorkTest\BHProject\DomainObjects\obj\Debug\net5.0\DomainObjects.dll
+F:\Projects\WorkTest\BHProject\DomainObjects\obj\Debug\net5.0\ref\DomainObjects.dll
+F:\Projects\WorkTest\BHProject\DomainObjects\obj\Debug\net5.0\DomainObjects.pdb
