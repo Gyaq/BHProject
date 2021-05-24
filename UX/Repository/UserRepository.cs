@@ -45,6 +45,11 @@ namespace UX.Repository
                 return appUser;
         }
 
+        /// <summary>
+        /// function that sends the updated/edited user to the api to persist to the database.
+        /// </summary>
+        /// <param name="appUser"></param>
+        /// <returns></returns>
         public async Task<AppUserModel> EditUser(AppUserModel appUser)
         {
             try

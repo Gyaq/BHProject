@@ -31,6 +31,10 @@ namespace UX.Repository
         #endregion
 
         #region endpoints
+        /// <summary>
+        /// function to get each reason with the user that created it. 
+        /// </summary>
+        /// <returns></returns>
         public async Task<UserReasonsViewModel> GetReasonsWithUser()
         {
             var userReasonsViewModel = new UserReasonsViewModel();
