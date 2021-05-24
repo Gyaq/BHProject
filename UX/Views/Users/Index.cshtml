@@ -1,4 +1,4 @@
-﻿@model IEnumerable<UX.Models.AppUserModel>
+@model IEnumerable<UX.Models.AppUserModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -38,7 +38,7 @@
                 @Html.DisplayFor(modelItem => item.LastName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ImageUrl)
+                @Html.TextAreaFor(modelItem => item.ImageUrl,5,40, new { @readonly = "readonly" })
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.JoinDate)

@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using UX.Data;
 
 namespace UX
 {
@@ -32,8 +31,6 @@ namespace UX
                 options.AppendVersion = true;
             });
 
-            services.AddDbContext<UXContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("UXContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
