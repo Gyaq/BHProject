@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using UX.Models;
 using System.Net.Http.Json;
+using UX.Repository;
 
 namespace UX.Controllers
 {
@@ -19,16 +20,14 @@ namespace UX.Controllers
     {
         #region class variables
         private readonly ILogger<ReasonsController> _logger;
-        private IConfiguration _config;
-        private string _apiAddy;
+        private readonly IUserRepository _userRep;
         #endregion
 
         #region constructors
-        public UsersController(ILogger<ReasonsController> logger, IConfiguration config)
+        public UsersController(ILogger<ReasonsController> logger, IUserRepository rep)
         {
             _logger = logger;
-            _config = config;
-            _apiAddy = _config["ApiUri"];
+            _userRep = rep;
         }
         #endregion
 
@@ -36,7 +35,7 @@ namespace UX.Controllers
         // GET: AppUsers
         public async Task<IActionResult> Index()
         {            
-            List<AppUserModel> users = await GetUsersFromApi();
+            List<AppUserModel> users = await _userRep.GetAllUsers();
 
             return View(users);
         }        
@@ -50,7 +49,7 @@ namespace UX.Controllers
 
             AppUserModel user;
 
-            user = await GetUserFromApi(id);
+            user = await _userRep.GetUser(id);
 
             if (user == null)
             {
@@ -67,18 +66,12 @@ namespace UX.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,ImageUrl,JoinDate")] AppUser appUser)
+        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,ImageUrl,JoinDate")] AppUserModel appUser)
         {
             if (ModelState.IsValid)
             {
 
-                using (var httpClient = new HttpClient())
-                {
-                    using (var response = await httpClient.PostAsJsonAsync(string.Format("{0}Users/Create", _apiAddy), appUser))
-                    {
-                        response.EnsureSuccessStatusCode();
-                    }
-                }
+                await _userRep.CreateUser(appUser);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -92,7 +85,7 @@ namespace UX.Controllers
                 return NotFound();
             }
 
-            var appUser = await GetUserFromApi(id);
+            var appUser = await _userRep.GetUser(id);
             if (appUser == null)
             {
                 return NotFound();
@@ -102,7 +95,7 @@ namespace UX.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,ImageUrl,JoinDate")] AppUser appUser)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,ImageUrl,JoinDate")] AppUserModel appUser)
         {
             if (id != appUser.Id)
             {
@@ -113,13 +106,7 @@ namespace UX.Controllers
             {
                 try
                 {
-                    using (var httpClient = new HttpClient())
-                    {
-                        using (var response = await httpClient.PostAsJsonAsync(string.Format("{0}Users/Edit", _apiAddy), appUser))
-                        {
-                            response.EnsureSuccessStatusCode();
-                        }
-                    }
+                    appUser = await _userRep.EditUser(appUser);
                 }
                 catch (Exception ex)
                 {
@@ -129,7 +116,7 @@ namespace UX.Controllers
                     }
                     else
                     {
-                        throw;
+                        _logger.LogError(string.Format("There was an error editing ID:{0}, Error message is:{1}",appUser.Id, ex.Message));
                     }
                 }
                 return RedirectToAction(nameof(Index));
@@ -145,7 +132,7 @@ namespace UX.Controllers
                 return NotFound();
             }
 
-            var appUser = await GetUserFromApi(id);
+            var appUser = await _userRep.GetUser(id);
             if (appUser == null)
             {
                 return NotFound();
@@ -159,11 +146,7 @@ namespace UX.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var response = string.Empty;
-            using (var client = new HttpClient())
-            {
-                var responseMessage = await client.DeleteAsync(string.Format("{0}Users/Delete/{1}", _apiAddy, id));
-            }
+            await _userRep.DeleteUser(id);
            
             return RedirectToAction(nameof(Index));
         }
@@ -172,40 +155,11 @@ namespace UX.Controllers
         #region helpers
         private async Task<bool> AppUserExists(int id)
         {
-            var bob = await GetUserFromApi(id);
-            return bob.Id == id;
+            var user = await _userRep.GetUser(id);
+            return user.Id == id;
         }
 
-        private async Task<List<AppUserModel>> GetUsersFromApi()
-        {
-            List<AppUserModel> users = new List<AppUserModel>();
-            using (var httpClient = new HttpClient())
-            {
-                using (var usersResponse = await httpClient.GetAsync(string.Format("{0}Users/GetUsers", _apiAddy)))
-                {
-                    string usersData = await usersResponse.Content.ReadAsStringAsync();
-                    users = JsonConvert.DeserializeObject<List<AppUserModel>>(usersData);
-                }
-            }
-
-            return users;
-        }
-
-        private async Task<AppUserModel> GetUserFromApi(int? id)
-        {
-            AppUserModel user = new AppUserModel();
-
-            using (var httpClient = new HttpClient())
-            {
-                using (var usersResponse = await httpClient.GetAsync(string.Format("{0}Users/GetUser/{1}", _apiAddy, id)))
-                {
-                    string usersData = await usersResponse.Content.ReadAsStringAsync();
-                    user = JsonConvert.DeserializeObject<AppUserModel>(usersData);
-                }
-            }
-
-            return user;
-        }
+        
         #endregion
     }
 }
