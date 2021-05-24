@@ -5,13 +5,7 @@ using System.Threading.Tasks;
 
 namespace UX.Models
 {
-    public class AppReasonModel
+    public class AppReasonModel : DomainObjects.Entities.AppReason
     {
-        public int Id { get; set; }
-        public string ReasonTitle { get; set; }
-        public string ReasonDescription { get; set; }
-        public int SortOrder { get; set; }
-        public DateTime DateTime { get; set; }
-        public int CreatedBy { get; set; }
     }
 }
