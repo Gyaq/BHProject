@@ -6,21 +6,30 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using UX.Models;
+using UX.Repository;
 
 namespace UX.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        #region class variables
+        private readonly ILogger<ReasonsController> _logger;
+        IReasonRepository _reasonRepository;
+        #endregion
 
-        public HomeController(ILogger<HomeController> logger)
+        #region constructors
+        public HomeController(ILogger<ReasonsController> logger, IReasonRepository rep)
         {
             _logger = logger;
+            _reasonRepository = rep;
         }
+        #endregion
 
-        public ActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var userReasonsViewModel = await _reasonRepository.GetReasonsWithUser();
+
+            return View(userReasonsViewModel);
         }
 
         public ActionResult Privacy()

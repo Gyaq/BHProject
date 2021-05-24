@@ -1,33 +1,60 @@
-﻿@model UX.ViewModels.UserReasonsViewModel
+﻿@model IEnumerable<UX.Models.ReasonWithUser>
+
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="Content">
+<h1>Index</h1>
 
-    <h1>Reasons</h1>
-    @foreach (var reason in Model.UserReasonsViewModels.ToArray())
-    {
-        <div class="reason-container">
-            <div class="reason">
-                <div class="reason-preview">
-                    <h6><img src="@reason.appUserModel.ImageUrl" /></h6>
-                    <h2>@(reason.appUserModel.FirstName + " " + reason.appUserModel.LastName) </h2>
-
-                </div>
-                <div class="reason-info">
-
-                    <h2>@reason.appReasonModel.ReasonTitle</h2>
-                    <h6>@reason.appReasonModel.ReasonDescription</h6>
-                </div>
-            </div>
-        </div>
-
-    }
-</div>
-
-   
-
-
-
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.appReasonModel.ReasonTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.appReasonModel.ReasonDescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.appReasonModel.SortOrder)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.appReasonModel.DateTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.appUserModel.FullName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.appReasonModel.ReasonTitle)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.appReasonModel.ReasonDescription)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.appReasonModel.SortOrder)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.appReasonModel.DateTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.appUserModel.FullName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.appReasonModel.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.appReasonModel.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.appReasonModel.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
