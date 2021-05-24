@@ -33,16 +33,16 @@ namespace UX.Repository
         #region public functions
         // GET: AppUsers
         public async Task<AppUserModel> CreateUser(AppUserModel appUser)
-        {          
-                using (var httpClient = new HttpClient())
+        {
+            using (var httpClient = new HttpClient())
+            {
+                using (var response = await httpClient.PostAsJsonAsync(string.Format("{0}Users/Create", _apiAddy), appUser))
                 {
-                    using (var response = await httpClient.PostAsJsonAsync(string.Format("{0}Users/Create", _apiAddy), appUser))
-                    {
-                        response.EnsureSuccessStatusCode();
-                    }
+                    response.EnsureSuccessStatusCode();
                 }
+            }
 
-                return appUser;
+            return appUser;
         }
 
         /// <summary>
@@ -53,22 +53,22 @@ namespace UX.Repository
         public async Task<AppUserModel> EditUser(AppUserModel appUser)
         {
             try
+            {
+                using (var httpClient = new HttpClient())
                 {
-                    using (var httpClient = new HttpClient())
+                    using (var response = await httpClient.PostAsJsonAsync(string.Format("{0}Users/Edit", _apiAddy), appUser))
                     {
-                        using (var response = await httpClient.PostAsJsonAsync(string.Format("{0}Users/Edit", _apiAddy), appUser))
-                        {
-                            response.EnsureSuccessStatusCode();
-                        }
+                        response.EnsureSuccessStatusCode();
                     }
                 }
-                catch (Exception ex)
-                {
-                    
-                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(String.Format("Error on reason edit. Error: {0}", ex.Message));
+            }
 
             return appUser;
-        }       
+        }      
 
         public async Task DeleteUser(int id)
         {
