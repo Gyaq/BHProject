@@ -55,7 +55,7 @@ namespace UX.Controllers
 
             var reasons = urvm.UserReasonsViewModels;
 
-            var reasonWithUser = reasons.Where(x=>x.appUserModel.Id == id.Value).FirstOrDefault();
+            var reasonWithUser = reasons.Where(x => x.appUserModel.Id == id.Value).FirstOrDefault();
 
             if (reasonWithUser == null)
             {
@@ -120,9 +120,9 @@ namespace UX.Controllers
                 {
                     await _reasonRepository.EditReason(appReasonModel);
                 }
-                catch 
+                catch
                 {
-                    
+
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -154,7 +154,7 @@ namespace UX.Controllers
             var appReasonModel = await _reasonRepository.GetReason(id);
             await _reasonRepository.DeleteReason(id);
             return RedirectToAction(nameof(Index));
-        }
+        }       
         #endregion
 
         #region helpers

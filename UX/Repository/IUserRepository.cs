@@ -15,8 +15,9 @@ namespace UX.Repository
 
         public Task DeleteUser(int id);
 
-
         public Task<List<AppUserModel>> GetAllUsers();
+
+        public Task<string> GetAllUsersJson();
 
         public Task<AppUserModel> GetUser(int? id);
     }

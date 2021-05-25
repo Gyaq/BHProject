@@ -163,8 +163,6 @@ namespace UX.Controllers
             var user = await _userRep.GetUser(id);
             return user.Id == id;
         }
-
-        
         #endregion
     }
 }
