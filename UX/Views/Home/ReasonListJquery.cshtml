@@ -1,0 +1,22 @@
+﻿@model UX.ViewModels.ReasonListJqueryViewModel
+@section Scripts
+{
+    <script type="text/javascript">
+        var apiUri = "@Model.ApiUri";
+    </script>
+    <script src="@Url.Content("~/js/ReasonList.js")"></script>
+}
+
+@{
+    ViewData["Title"] = "jQueryExample";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="text-center">
+    <div class="Content">
+        <h1>Reasons</h1>
+        @Html.ActionLink("Razor Example", "ReasonListRazor")
+        
+    </div>
+</div>

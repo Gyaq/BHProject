@@ -10,7 +10,9 @@ namespace UX.Repository
         public Task<UserReasonsViewModel> GetReasonsWithUser();
 
         public Task<List<AppReasonModel>> GetAllReasons();
-        
+
+        public Task<string> GetAllReasonsJson();
+
         public Task<AppReasonModel> GetReason(int id);
 
         public Task<AppReasonModel> Create(AppReasonModel appReasonModel);

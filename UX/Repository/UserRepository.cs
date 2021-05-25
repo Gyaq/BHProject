@@ -95,6 +95,20 @@ namespace UX.Repository
             return users;
         }
 
+        public async Task<string> GetAllUsersJson()
+        {
+            string usersData;
+            using (var httpClient = new HttpClient())
+            {
+                using (var usersResponse = await httpClient.GetAsync(string.Format("{0}Users/GetUsers", _apiAddy)))
+                {
+                     usersData = await usersResponse.Content.ReadAsStringAsync();
+                }
+            }
+
+            return usersData;
+        }
+
         public async Task<AppUserModel> GetUser(int? id)
         {
             AppUserModel user = new AppUserModel();

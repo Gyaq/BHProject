@@ -73,6 +73,27 @@ namespace UX.Repository
             return reasons;
         }
 
+        /// <summary>
+        /// added this for the jQuersy example
+        /// 
+        /// gets all reasons and returns them as a json string
+        /// </summary>
+        /// <returns></returns>
+        public async Task<string> GetAllReasonsJson()
+        {
+            string reasonsData;
+
+            using (var httpClient = new HttpClient())
+            {
+                using (var reasonsResponse = await httpClient.GetAsync(string.Format("{0}Reasons/GetReasons", _apiAddy)))
+                {
+                    reasonsData = await reasonsResponse.Content.ReadAsStringAsync();                    
+                }
+            }
+
+            return reasonsData;
+        }
+
         public async Task<AppReasonModel> GetReason(int id)
         {
             var reasons = new AppReasonModel();

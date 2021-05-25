@@ -1,0 +1,30 @@
+﻿@model UX.ViewModels.UserReasonsViewModel
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="text-center">
+    <div class="Content">
+
+        <h1>Reasons</h1>
+        @Html.ActionLink("jQuery Example", "ReasonListJquery")
+        @foreach (var reason in Model.UserReasonsViewModels.ToArray())
+        {
+            <div class="reason-container">
+                <div class="reason">
+                    <div class="reason-preview">
+                        <h6><img src="@reason.appUserModel.ImageUrl" /></h6>
+                        <h2>@(reason.appUserModel.FirstName + " " + reason.appUserModel.LastName) </h2>
+
+                    </div>
+                    <div class="reason-info">
+
+                        <h2>@reason.appReasonModel.ReasonTitle</h2>
+                        <h6>@reason.appReasonModel.ReasonDescription</h6>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
