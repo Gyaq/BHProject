@@ -30,28 +30,28 @@ namespace API.Controllers
 
         #region endpoints
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<AppUserModel>>> GetUsers()
         {
             var users = await _context.Users.ToListAsync();
             return users;
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<AppUser>> GetUser(int id)
+        public async Task<ActionResult<AppUserModel>> GetUser(int id)
         {
             var user = await _context.Users.FindAsync(id);
             return user;
         }
 
         [HttpGet("{id}")]
-        public async Task<AppUser> Edit(int id)
+        public async Task<AppUserModel> Edit(int id)
         {
             try
             {
                 var appUser = await _context.Users.FindAsync(id);
                 if (appUser == null)
                 {
-                    var error = new AppUser
+                    var error = new AppUserModel
                     {
                         ErrorMessage = string.Format("ID: {0} not not found", id)
                     };
@@ -64,7 +64,7 @@ namespace API.Controllers
             }
             catch (Exception ex)
             {
-                var error = new AppUser
+                var error = new AppUserModel
                 {
                     ErrorMessage = string.Format("ID: {0} not updated, there was an erorr. ErrorMessage: {1}", id, ex.Message)
                 };
@@ -75,7 +75,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<AppUser> Edit([Bind("Id,FirstName,LastName,ImageUrl,JoinDate")] AppUser appUser)
+        public async Task<AppUserModel> Edit([Bind("Id,FirstName,LastName,ImageUrl,JoinDate")] AppUserModel appUser)
         { 
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace API.Controllers
                 }
                 catch (Exception ex)
                 {
-                    var error = new AppUser();
+                    var error = new AppUserModel();
                     error.ErrorMessage = string.Format("ID: {0} not updated, there was an erorr. ErrorMessage: {1}", appUser.Id, ex.Message);
                     _logger.LogError(string.Format("ID: {0} not updated, there was an erorr. ErrorMessage: {1}", appUser.Id, ex.Message));
                     return error;
@@ -96,7 +96,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,ImageUrl,JoinDate")] AppUser appUser)
+        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,ImageUrl,JoinDate")] AppUserModel appUser)
         {
             if (ModelState.IsValid)
             {
@@ -107,7 +107,7 @@ namespace API.Controllers
                 }
                 catch (Exception ex)
                 {
-                    var error = new AppUser
+                    var error = new AppUserModel
                     {
                         ErrorMessage = string.Format("The entry was not added to the database, there was an erorr. ErrorMessage: {0}", ex.Message)
                     };

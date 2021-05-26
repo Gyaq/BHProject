@@ -1,5 +1,6 @@
 ﻿using API.Data;
 using API.Entities;
+using API.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -15,33 +16,33 @@ namespace API.Controllers
     public class ReasonsController : Controller
     {
         #region class variables
-        private readonly DataContext _context;
         private readonly ILogger<ReasonsController> _logger;
+        private IReasonRepository _resonRepository;
         #endregion
 
         #region properties/public variables
         #endregion
 
         #region constructors
-        public ReasonsController(ILogger<ReasonsController> logger, DataContext context)
+        public ReasonsController(ILogger<ReasonsController> logger, IReasonRepository resonRepository)
         {
-            _context = context;
             _logger = logger;
-        }
+            _resonRepository = resonRepository;
+    }
         #endregion
 
         #region endpoints
         [HttpGet]
-        public async Task<IEnumerable<AppReason>> GetReasons()
+        public async Task<IEnumerable<AppReasonModel>> GetReasons()
         {
             try
             {
-                var appReasons = await _context.Reason.ToListAsync();
+                var appReasons = await _resonRepository.GetReasons();
                 return appReasons;
             }
             catch (Exception ex)
             {
-                var error = new AppReason[] { new AppReason() };
+                var error = new AppReasonModel[] { new AppReasonModel() };
                 error[0].ErrorMessage = string.Format("There was an erorr getting reasons. ErrorMessage: {0}", ex.Message);
                 _logger.LogError(string.Format("There was an erorr getting reasons. ErrorMessage: {0}", ex.Message));
                 return error;
@@ -49,16 +50,16 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<AppReason> GetReason(int id)
+        public async Task<AppReasonModel> GetReason(int id)
         {
             try
             {
-                var appReason = await _context.Reason.FindAsync(id);
+                var appReason = await _resonRepository.GetReason(id);
                 return appReason;
             }
             catch (Exception ex)
             {
-                var error = new AppReason();
+                var error = new AppReasonModel();
                 error.ErrorMessage = string.Format("There was an erorr getting reason ID:{0}. ErrorMessage: {1}", id, ex.Message);
                 _logger.LogError(string.Format("There was an erorr getting reason ID:{0}. ErrorMessage: {1}", id, ex.Message));
                 return error;
@@ -66,18 +67,17 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<AppReason> Create([Bind("Id,ReasonTitle,ReasonDescription,SortOrder,DateTime,CreatedBy")] AppReason appReason)
+        public async Task<AppReasonModel> Create([Bind("Id,ReasonTitle,ReasonDescription,SortOrder,DateTime,CreatedBy")] AppReasonModel appReason)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Add(appReason);
-                    await _context.SaveChangesAsync();
+                    await _resonRepository.Create(appReason);
                 }
                 catch (DbUpdateException dex)
                 {
-                    var error = new AppReason();
+                    var error = new AppReasonModel();
                     error.ErrorMessage = string.Format("The entry way not added to the database, there was an erorr. ErrorMessage: {0}", dex.Message);
                     _logger.LogError(string.Format("The entry way not added to the database, there was an erorr. ErrorMessage: {0}", dex.Message));
                     return error;
@@ -87,14 +87,14 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<AppReason> Edit(int id)
+        public async Task<AppReasonModel> Edit(int id)
         {
             try
             {
-                var appReason = await _context.Reason.FindAsync(id);
+                var appReason = await _resonRepository.GetReason(id);
                 if (appReason == null)
                 {
-                    var error = new AppReason();
+                    var error = new AppReasonModel();
                     error.ErrorMessage = string.Format("ID: {0} not not found", id);
                     _logger.LogError(string.Format("ID: {0} not not found", id));
                     return error;
@@ -104,7 +104,7 @@ namespace API.Controllers
             }
             catch (Exception ex)
             {
-                var error = new AppReason();
+                var error = new AppReasonModel();
                 error.ErrorMessage = string.Format("ID: {0} not updated, there was an erorr. ErrorMessage: {1}", id, ex.Message);
                 _logger.LogError(string.Format("ID: {0} not updated, there was an erorr. ErrorMessage: {1}", id, ex.Message));
                 return error;
@@ -112,7 +112,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<AppReason> Edit(int id, [Bind("Id,ReasonTitle,ReasonDescription,SortOrder,DateTime,CreatedBy")] AppReason appReason)
+        public async Task<AppReasonModel> Edit(int id, [Bind("Id,ReasonTitle,ReasonDescription,SortOrder,DateTime,CreatedBy")] AppReasonModel appReason)
         {
             if (id != appReason.Id)
             {
@@ -125,12 +125,11 @@ namespace API.Controllers
             {
                 try
                 {
-                    _context.Update(appReason);
-                    await _context.SaveChangesAsync();
+                    await _resonRepository.Edit(appReason);
                 }
                 catch (Exception ex)
                 {
-                    var error = new AppReason();
+                    var error = new AppReasonModel();
                     error.ErrorMessage = string.Format("ID: {0} not updated, there was an erorr. ErrorMessage: {1}", id, ex.Message);
                     _logger.LogError(string.Format("ID: {0} not updated, there was an erorr. ErrorMessage: {1}", id, ex.Message));
                     return error;
@@ -143,10 +142,7 @@ namespace API.Controllers
         [HttpPost("{id}"), ActionName("Delete")]
         public async Task<int> DeleteReason(int id)
         {
-            var appReason = await _context.Reason.FindAsync(id);
-            _context.Reason.Remove(appReason);
-            var numDel = await _context.SaveChangesAsync();
-            return numDel;
+            return await _resonRepository.DeleteReason(id);
         }
 
         #endregion
